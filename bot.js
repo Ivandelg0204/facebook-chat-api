@@ -1,27 +1,29 @@
 const login = require("./index.js");
+const fs = require("fs");
 
-login(
-  { email: "ivandelg024@gmail.com", password: "3144267821IvanDelgado" },
-  (err, api) => {
+const appState = JSON.parse(fs.readFileSync("appstate.json", "utf8"));
+
+login({ appState }, (err, api) => {
+
+  if (err) return console.error(err);
+
+  console.log("Messenger conectado");
+
+  api.listenMqtt((err, message) => {
+
     if (err) return console.error(err);
 
-    console.log("Messenger conectado");
+    if (message.body) {
 
-    api.listenMqtt((err, message) => {
+      console.log("Mensaje:", message.body);
 
-      if (err) return console.error(err);
+      api.sendMessage(
+        "Hola 👋 soy el asistente inmobiliario.",
+        message.threadID
+      );
 
-      if (message.body) {
+    }
 
-        console.log("Mensaje:", message.body);
+  });
 
-        api.sendMessage(
-          "Hola, soy Marco si esta disponible.",
-          message.threadID
-        );
-
-      }
-
-    });
-  }
-);
+});
