@@ -1,4 +1,4 @@
-const login = require("facebook-chat-api");
+const login = require("./index.js");
 
 login(
   { email: "ivandelg024@gmail.com", password: "3144267821IvanDelgado" },
